@@ -8,11 +8,22 @@ export class MoviesController {
   @Get('search')
   async searchMovies(
     @Query('query') query: string,
-    @Query('page') page: string = '1',
+    @Query('page_offset') pageOffset: string = '1',
+    @Query('page_size') pageSize: string = '10',
+    @Query('order_by') orderBy: string = 'imdbID',
+    @Query('sort_direction') sortDirection: string = 'ascending',
     @Query('type') type?: string,
     @Query('year') year?: string,
   ) {
-    return this.moviesService.searchMovies(query, page, type, year);
+    return this.moviesService.searchMovies(
+      query,
+      pageOffset,
+      pageSize,
+      orderBy,
+      sortDirection,
+      type,
+      year,
+    );
   }
 
   @Get(':imdbID')

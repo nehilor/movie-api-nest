@@ -11,7 +11,10 @@ export class MoviesService {
 
   async searchMovies(
     query: string,
-    page: string = '1',
+    pageOffset: string = '1',
+    pageSize: string = '10',
+    orderBy: string = 'imdbID',
+    sortDirection: string = 'ascending',
     type?: string,
     year?: string,
   ) {
@@ -27,10 +30,13 @@ export class MoviesService {
         };
       }
 
+      // Convert page_offset to OMDb page format (OMDb uses 1-based pages)
+      const omdbPage = pageOffset;
+
       const params = {
         apikey: this.omdbApiKey,
         s: query,
-        page: page,
+        page: omdbPage,
         ...(type && { type }),
         ...(year && { y: year }),
       };
@@ -48,10 +54,58 @@ export class MoviesService {
         };
       }
 
-      return response.data;
+      // Apply sorting if needed (OMDb doesn't support custom sorting, so we do it here)
+      let searchResults = response.data.Search || [];
+
+      if (orderBy && sortDirection) {
+        searchResults = this.sortMovies(searchResults, orderBy, sortDirection);
+      }
+
+      // Apply page size limit (OMDb returns 10 results per page by default)
+      const pageSizeNum = parseInt(pageSize, 10);
+      if (pageSizeNum !== 10) {
+        searchResults = searchResults.slice(0, pageSizeNum);
+      }
+
+      return {
+        ...response.data,
+        Search: searchResults,
+        pagination: {
+          page_offset: parseInt(pageOffset, 10),
+          page_size: parseInt(pageSize, 10),
+          sort_order: [
+            {
+              order_by: orderBy,
+              sort_direction: sortDirection,
+            },
+          ],
+        },
+      };
     } catch (error) {
       throw new Error(`Failed to search movies: ${error.message}`);
     }
+  }
+
+  private sortMovies(movies: any[], orderBy: string, sortDirection: string) {
+    return movies.sort((a, b) => {
+      let aValue = a[orderBy];
+      let bValue = b[orderBy];
+
+      // Handle different data types
+      if (orderBy === 'Year') {
+        aValue = parseInt(aValue, 10) || 0;
+        bValue = parseInt(bValue, 10) || 0;
+      } else if (typeof aValue === 'string') {
+        aValue = aValue.toLowerCase();
+        bValue = bValue.toLowerCase();
+      }
+
+      if (sortDirection === 'descending') {
+        return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+      } else {
+        return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+      }
+    });
   }
 
   async getMovieDetails(imdbID: string) {

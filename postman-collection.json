@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "Movie API - OMDb Integration",
-    "description": "Simple collection for testing movie search and details endpoints",
+    "name": "Movie API - Enhanced Pagination",
+    "description": "Collection for testing movie search with enhanced pagination parameters",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "version": "1.0.0"
   },
@@ -61,12 +61,12 @@
       "name": "Movies",
       "item": [
         {
-          "name": "Search Movies",
+          "name": "Search Movies - Enhanced Pagination",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/movies/search?query=batman&page=1",
+              "raw": "{{baseUrl}}/movies/search?query=batman&page_offset=1&page_size=5&order_by=Year&sort_direction=descending",
               "host": ["{{baseUrl}}"],
               "path": ["movies", "search"],
               "query": [
@@ -76,9 +76,24 @@
                   "description": "Movie title to search for"
                 },
                 {
-                  "key": "page",
+                  "key": "page_offset",
                   "value": "1",
-                  "description": "Page number (1-100)"
+                  "description": "Page offset (1-based)"
+                },
+                {
+                  "key": "page_size",
+                  "value": "5",
+                  "description": "Number of results per page"
+                },
+                {
+                  "key": "order_by",
+                  "value": "Year",
+                  "description": "Field to sort by: Title, Year, imdbID, Type"
+                },
+                {
+                  "key": "sort_direction",
+                  "value": "descending",
+                  "description": "Sort direction: ascending, descending"
                 },
                 {
                   "key": "type",
@@ -94,7 +109,7 @@
                 }
               ]
             },
-            "description": "Search movies by title using OMDb API"
+            "description": "Search movies with enhanced pagination parameters"
           },
           "response": [
             {
@@ -103,7 +118,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/movies/search?query=batman&page=1",
+                  "raw": "{{baseUrl}}/movies/search?query=batman&page_offset=1&page_size=5&order_by=Year&sort_direction=descending",
                   "host": ["{{baseUrl}}"],
                   "path": ["movies", "search"],
                   "query": [
@@ -112,41 +127,20 @@
                       "value": "batman"
                     },
                     {
-                      "key": "page",
+                      "key": "page_offset",
                       "value": "1"
-                    }
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n  \"Search\": [\n    {\n      \"Title\": \"Batman Begins\",\n      \"Year\": \"2005\",\n      \"imdbID\": \"tt0372784\",\n      \"Type\": \"movie\",\n      \"Poster\": \"https://m.media-amazon.com/images/M/MV5BOTY4YjI2N2MtYmFlMC00ZjcyLTg3YjEtMDQyM2ZjYzQ5YTBkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg\"\n    },\n    {\n      \"Title\": \"Batman\",\n      \"Year\": \"1989\",\n      \"imdbID\": \"tt0096895\",\n      \"Type\": \"movie\",\n      \"Poster\": \"https://m.media-amazon.com/images/M/MV5BMTYwNjAyODIyMF5BMl5BanBnXkFtZTYwNDMwMDk2._V1_SX300.jpg\"\n    }\n  ],\n  \"totalResults\": \"100\",\n  \"Response\": \"True\"\n}"
-            },
-            {
-              "name": "No Results",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseUrl}}/movies/search?query=nonexistentmovie&page=1",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["movies", "search"],
-                  "query": [
-                    {
-                      "key": "query",
-                      "value": "nonexistentmovie"
                     },
                     {
-                      "key": "page",
-                      "value": "1"
+                      "key": "page_size",
+                      "value": "5"
+                    },
+                    {
+                      "key": "order_by",
+                      "value": "Year"
+                    },
+                    {
+                      "key": "sort_direction",
+                      "value": "descending"
                     }
                   ]
                 }
@@ -161,7 +155,7 @@
                 }
               ],
               "cookie": [],
-              "body": "{\n  \"Search\": [],\n  \"totalResults\": \"0\",\n  \"Response\": \"False\",\n  \"Error\": \"Movie not found!\"\n}"
+              "body": "{\n  \"Search\": [\n    {\n      \"Title\": \"The Batman\",\n      \"Year\": \"2022\",\n      \"imdbID\": \"tt1877830\",\n      \"Type\": \"movie\",\n      \"Poster\": \"https://m.media-amazon.com/images/M/MV5BMmU5NGJlMzAtMGNmOC00YjJjLTgyMzUtNjAyYmE4Njg5YWMyXkEyXkFqcGc@._V1_SX300.jpg\"\n    },\n    {\n      \"Title\": \"Batman v Superman: Dawn of Justice\",\n      \"Year\": \"2016\",\n      \"imdbID\": \"tt2975590\",\n      \"Type\": \"movie\",\n      \"Poster\": \"https://m.media-amazon.com/images/M/MV5BZTJkYjdmYjYtOGMyNC00ZGU1LThkY2ItYTc1OTVlMmE2YWY1XkEyXkFqcGc@._V1_SX300.jpg\"\n    }\n  ],\n  \"totalResults\": \"619\",\n  \"Response\": \"True\",\n  \"pagination\": {\n    \"page_offset\": 1,\n    \"page_size\": 5,\n    \"sort_order\": [\n      {\n        \"order_by\": \"Year\",\n        \"sort_direction\": \"descending\"\n      }\n    ]\n  }\n}"
             }
           ]
         },
@@ -207,34 +201,11 @@
               ],
               "cookie": [],
               "body": "{\n  \"Title\": \"Batman Begins\",\n  \"Year\": \"2005\",\n  \"Rated\": \"PG-13\",\n  \"Released\": \"15 Jun 2005\",\n  \"Runtime\": \"140 min\",\n  \"Genre\": \"Action, Crime, Drama\",\n  \"Director\": \"Christopher Nolan\",\n  \"Writer\": \"Bob Kane, David S. Goyer, Christopher Nolan\",\n  \"Actors\": \"Christian Bale, Michael Caine, Liam Neeson\",\n  \"Plot\": \"After training with his mentor, Batman begins his fight to free crime-ridden Gotham City from corruption.\",\n  \"Language\": \"English, Mandarin\",\n  \"Country\": \"United States, United Kingdom\",\n  \"Awards\": \"Nominated for 1 Oscar. 13 wins & 79 nominations total\",\n  \"Poster\": \"https://m.media-amazon.com/images/M/MV5BOTY4YjI2N2MtYmFlMC00ZjcyLTg3YjEtMDQyM2ZjYzQ5YTBkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg\",\n  \"Ratings\": [\n    {\n      \"Source\": \"Internet Movie Database\",\n      \"Value\": \"8.2/10\"\n    },\n    {\n      \"Source\": \"Rotten Tomatoes\",\n      \"Value\": \"84%\"\n    },\n    {\n      \"Source\": \"Metacritic\",\n      \"Value\": \"70/100\"\n    }\n  ],\n  \"Metascore\": \"70\",\n  \"imdbRating\": \"8.2\",\n  \"imdbVotes\": \"1,515,918\",\n  \"imdbID\": \"tt0372784\",\n  \"Type\": \"movie\",\n  \"DVD\": \"18 Oct 2005\",\n  \"BoxOffice\": \"$206,863,479\",\n  \"Production\": \"N/A\",\n  \"Website\": \"N/A\",\n  \"Response\": \"True\"\n}"
-            },
-            {
-              "name": "Movie Not Found",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseUrl}}/movies/tt9999999",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["movies", "tt9999999"]
-                }
-              },
-              "status": "Not Found",
-              "code": 404,
-              "_postman_previewlanguage": "json",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "cookie": [],
-              "body": "{\n  \"statusCode\": 404,\n  \"message\": \"Movie not found\",\n  \"error\": \"Not Found\"\n}"
             }
           ]
         }
       ],
-      "description": "Movie endpoints integrated with OMDb API"
+      "description": "Movie endpoints with enhanced pagination"
     }
   ],
   "event": [
@@ -262,13 +233,21 @@
           "    pm.expect(pm.response.headers.get('Content-Type')).to.exist;",
           "});",
           "",
-          "// Test for successful movie search",
+          "// Test for successful movie search with pagination",
           "if (pm.request.url.toString().includes('/movies/search')) {",
           "    pm.test('Search response has Search array', function () {",
           "        const jsonData = pm.response.json();",
           "        pm.expect(jsonData).to.have.property('Search');",
           "        pm.expect(jsonData).to.have.property('totalResults');",
           "        pm.expect(jsonData).to.have.property('Response');",
+          "    });",
+          "    ",
+          "    pm.test('Response includes pagination metadata', function () {",
+          "        const jsonData = pm.response.json();",
+          "        pm.expect(jsonData).to.have.property('pagination');",
+          "        pm.expect(jsonData.pagination).to.have.property('page_offset');",
+          "        pm.expect(jsonData.pagination).to.have.property('page_size');",
+          "        pm.expect(jsonData.pagination).to.have.property('sort_order');",
           "    });",
           "}",
           "",
