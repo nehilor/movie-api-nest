@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MoviesController } from './movies.controller';
 import { MoviesService } from './movies.service';
+import { SearchMoviesDto, MovieDetailDto } from './dto/movies.dto';
 
 describe('MoviesController', () => {
   let controller: MoviesController;
@@ -31,21 +32,37 @@ describe('MoviesController', () => {
   describe('searchMovies', () => {
     it('should return search results', async () => {
       const mockResults = {
-        Search: [{ Title: 'Batman', Year: '1989', imdbID: 'tt0096895' }],
+        Search: [
+          {
+            Title: 'Batman',
+            Year: '1989',
+            imdbID: 'tt0096895',
+            Type: 'movie',
+            Poster: 'poster.jpg',
+          },
+        ],
         totalResults: '1',
         Response: 'True',
+        pagination: {
+          page_offset: 1,
+          page_size: 10,
+          sort_order: [{ order_by: 'imdbID', sort_direction: 'ascending' }],
+        },
+      };
+
+      const searchDto: SearchMoviesDto = {
+        query: 'batman',
+        page_offset: '1',
+        page_size: '10',
+        order_by: 'imdbID',
+        sort_direction: 'ascending',
       };
 
       jest.spyOn(service, 'searchMovies').mockResolvedValue(mockResults);
 
-      const result = await controller.searchMovies('batman', '1');
+      const result = await controller.searchMovies(searchDto);
       expect(result).toEqual(mockResults);
-      expect(service.searchMovies).toHaveBeenCalledWith(
-        'batman',
-        '1',
-        undefined,
-        undefined,
-      );
+      expect(service.searchMovies).toHaveBeenCalledWith(searchDto);
     });
   });
 
@@ -59,9 +76,13 @@ describe('MoviesController', () => {
         Response: 'True',
       };
 
+      const movieDetailDto: MovieDetailDto = {
+        imdbID: 'tt0096895',
+      };
+
       jest.spyOn(service, 'getMovieDetails').mockResolvedValue(mockDetails);
 
-      const result = await controller.getMovieDetails('tt0096895');
+      const result = await controller.getMovieDetails(movieDetailDto);
       expect(result).toEqual(mockDetails);
       expect(service.getMovieDetails).toHaveBeenCalledWith('tt0096895');
     });
