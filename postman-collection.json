@@ -1,0 +1,289 @@
+{
+  "info": {
+    "name": "Movie API - OMDb Integration",
+    "description": "Simple collection for testing movie search and details endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Get Hello World",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "Basic endpoint to verify that the API is working"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/",
+                  "host": ["{{baseUrl}}"],
+                  "path": [""]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/html; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "Hello World!"
+            }
+          ]
+        }
+      ],
+      "description": "Endpoints to verify API status"
+    },
+    {
+      "name": "Movies",
+      "item": [
+        {
+          "name": "Search Movies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/search?query=batman&page=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", "search"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "batman",
+                  "description": "Movie title to search for"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (1-100)"
+                },
+                {
+                  "key": "type",
+                  "value": "",
+                  "description": "Type: movie, series, episode (optional)",
+                  "disabled": true
+                },
+                {
+                  "key": "year",
+                  "value": "",
+                  "description": "Year of release (optional)",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Search movies by title using OMDb API"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/movies/search?query=batman&page=1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["movies", "search"],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "batman"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"Search\": [\n    {\n      \"Title\": \"Batman Begins\",\n      \"Year\": \"2005\",\n      \"imdbID\": \"tt0372784\",\n      \"Type\": \"movie\",\n      \"Poster\": \"https://m.media-amazon.com/images/M/MV5BOTY4YjI2N2MtYmFlMC00ZjcyLTg3YjEtMDQyM2ZjYzQ5YTBkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg\"\n    },\n    {\n      \"Title\": \"Batman\",\n      \"Year\": \"1989\",\n      \"imdbID\": \"tt0096895\",\n      \"Type\": \"movie\",\n      \"Poster\": \"https://m.media-amazon.com/images/M/MV5BMTYwNjAyODIyMF5BMl5BanBnXkFtZTYwNDMwMDk2._V1_SX300.jpg\"\n    }\n  ],\n  \"totalResults\": \"100\",\n  \"Response\": \"True\"\n}"
+            },
+            {
+              "name": "No Results",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/movies/search?query=nonexistentmovie&page=1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["movies", "search"],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "nonexistentmovie"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"Search\": [],\n  \"totalResults\": \"0\",\n  \"Response\": \"False\",\n  \"Error\": \"Movie not found!\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Movie Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movies/:imdbID",
+              "host": ["{{baseUrl}}"],
+              "path": ["movies", ":imdbID"],
+              "variable": [
+                {
+                  "key": "imdbID",
+                  "value": "tt0372784",
+                  "description": "IMDb ID of the movie (e.g., tt0372784)"
+                }
+              ]
+            },
+            "description": "Get complete details of a movie by its IMDb ID using OMDb API"
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/movies/tt0372784",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["movies", "tt0372784"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"Title\": \"Batman Begins\",\n  \"Year\": \"2005\",\n  \"Rated\": \"PG-13\",\n  \"Released\": \"15 Jun 2005\",\n  \"Runtime\": \"140 min\",\n  \"Genre\": \"Action, Crime, Drama\",\n  \"Director\": \"Christopher Nolan\",\n  \"Writer\": \"Bob Kane, David S. Goyer, Christopher Nolan\",\n  \"Actors\": \"Christian Bale, Michael Caine, Liam Neeson\",\n  \"Plot\": \"After training with his mentor, Batman begins his fight to free crime-ridden Gotham City from corruption.\",\n  \"Language\": \"English, Mandarin\",\n  \"Country\": \"United States, United Kingdom\",\n  \"Awards\": \"Nominated for 1 Oscar. 13 wins & 79 nominations total\",\n  \"Poster\": \"https://m.media-amazon.com/images/M/MV5BOTY4YjI2N2MtYmFlMC00ZjcyLTg3YjEtMDQyM2ZjYzQ5YTBkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg\",\n  \"Ratings\": [\n    {\n      \"Source\": \"Internet Movie Database\",\n      \"Value\": \"8.2/10\"\n    },\n    {\n      \"Source\": \"Rotten Tomatoes\",\n      \"Value\": \"84%\"\n    },\n    {\n      \"Source\": \"Metacritic\",\n      \"Value\": \"70/100\"\n    }\n  ],\n  \"Metascore\": \"70\",\n  \"imdbRating\": \"8.2\",\n  \"imdbVotes\": \"1,515,918\",\n  \"imdbID\": \"tt0372784\",\n  \"Type\": \"movie\",\n  \"DVD\": \"18 Oct 2005\",\n  \"BoxOffice\": \"$206,863,479\",\n  \"Production\": \"N/A\",\n  \"Website\": \"N/A\",\n  \"Response\": \"True\"\n}"
+            },
+            {
+              "name": "Movie Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/movies/tt9999999",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["movies", "tt9999999"]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"statusCode\": 404,\n  \"message\": \"Movie not found\",\n  \"error\": \"Not Found\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Movie endpoints integrated with OMDb API"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script that runs before each request",
+          "console.log('Making request to:', pm.request.url.toString());"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script that runs after each request",
+          "pm.test('Response time is less than 5000ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});",
+          "",
+          "pm.test('Response has Content-Type header', function () {",
+          "    pm.expect(pm.response.headers.get('Content-Type')).to.exist;",
+          "});",
+          "",
+          "// Test for successful movie search",
+          "if (pm.request.url.toString().includes('/movies/search')) {",
+          "    pm.test('Search response has Search array', function () {",
+          "        const jsonData = pm.response.json();",
+          "        pm.expect(jsonData).to.have.property('Search');",
+          "        pm.expect(jsonData).to.have.property('totalResults');",
+          "        pm.expect(jsonData).to.have.property('Response');",
+          "    });",
+          "}",
+          "",
+          "// Test for movie details",
+          "if (pm.request.url.toString().includes('/movies/tt')) {",
+          "    pm.test('Movie details response has required fields', function () {",
+          "        const jsonData = pm.response.json();",
+          "        pm.expect(jsonData).to.have.property('Title');",
+          "        pm.expect(jsonData).to.have.property('Year');",
+          "        pm.expect(jsonData).to.have.property('imdbID');",
+          "        pm.expect(jsonData).to.have.property('Plot');",
+          "    });",
+          "}"
+        ]
+      }
+    }
+  ]
+}
