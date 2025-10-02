@@ -1,19 +1,23 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { HttpModule } from '@nestjs/axios';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MoviesController } from './movies.controller';
-import { MoviesService } from './movies.service';
+import { MoviesModule } from './modules/movies/movies.module';
+import { FavoritesModule } from './modules/favorites/favorites.module';
+import { HealthModule } from './modules/health/health.module';
+import { appConfig } from './config/app.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [() => appConfig],
     }),
-    HttpModule,
+    MoviesModule,
+    FavoritesModule,
+    HealthModule,
   ],
-  controllers: [AppController, MoviesController],
-  providers: [AppService, MoviesService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
